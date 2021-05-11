@@ -1,41 +1,40 @@
 import * as fs from 'fs/promises'
 import 'ts-replace-all'
 
-type replacePattern = [RegExp | string, string]
+type replacePattern = [RegExp | string, string | any]
 
-interface optionI {
-    include: RegExp,
+export interface optionI {
+    include?: RegExp,
     namespace?: string,
     pattern: replacePattern[]
 }
 
 const generateFilter = (options) => {
     if (Object.prototype.toString.call(options.include) !== '[object RegExp]') {
-        console.warn(`Options.include must be a RegExp object, but gets an '${typeof options.include}' type.`);
+        console.warn(`Plugin "textReplace": Options.include must be a RegExp object, but gets an '${typeof options.include}' type. \nThis request will match ANY file!`);
         return /.*/
     }
     return options.include;
 }
 
 const replaceWithPattern = (source: string, pattern: replacePattern[]) => {
-    let content= source.slice()
-    pattern.forEach(([regex, replaceString]) => {
-        content=content.replaceAll(regex, replaceString)
+    let content = source.slice()
+    pattern.forEach(([regex, replacer]) => {
+        content = content.replaceAll(regex, replacer)
     });
     return content
 }
 
-const setupPlugin = (filter:RegExp, namespace, pattern:replacePattern[], errors) => {
+const setupPlugin = (filter: RegExp, namespace, pattern: replacePattern[], errors) => {
     return {
         name: 'textReplace',
         setup(build) {
-            if (errors.length === 0) {
-                build.onLoad({ filter, namespace }, async ({ path }) => {
-                    const source = await fs.readFile(path, "utf8");
-                    const contents = replaceWithPattern(source, pattern)
-                    return { contents };
-                })
-            }
+
+            build.onLoad({ filter, namespace }, async ({ path }) => {
+                const source = await fs.readFile(path, "utf8");
+                const contents = replaceWithPattern(source, pattern)
+                return { contents };
+            })
         }
     }
 }
@@ -49,14 +48,11 @@ function textReplace(options: optionI = {
     const namespace = options?.namespace
 
     if (!Array.isArray(options.pattern)) {
-        //console.error(`Options.pattern must be an Array!`)
-        errors.push({ text: `Plugin "textReplace": Options.pattern must be an Array!` })
-        return setupPlugin(filter, namespace, options.pattern, errors)
+        throw new Error(`Plugin "textReplace": Options.pattern must be an Array!`)
+
     }
     if (options.pattern.length === 0) {
-        //console.error(`Options.pattern must not be an empty Array!`)
-        errors.push({ text: `Plugin "textReplace": Options.pattern must not be an empty Array!` })
-        return setupPlugin(filter, namespace, options.pattern, errors)
+        throw new Error(`Plugin "textReplace": Options.pattern must not be an empty Array!`)
     }
 
     return setupPlugin(filter, namespace, options.pattern, errors)

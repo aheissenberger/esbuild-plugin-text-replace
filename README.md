@@ -22,8 +22,8 @@ await esbuild.build(
                 {
                     include: /mypackage\/dist/loader\.js$\/,
                     patterns:[
-                        'const installRetry':'let installRetry',
-                        /const\s+{\s*textReplace\s*}\s*=\s*require\s*\(\s*'esbuild-plugin-text-replace'\s*\)\s*;/ : "'import textReplace from 'esbuild-plugin-text-replace'"
+                        ['const installRetry','let installRetry'],
+                        [/const\s+{\s*textReplace\s*}\s*=\s*require\s*\(\s*'esbuild-plugin-text-replace'\s*\)\s*;/g , "'import textReplace from 'esbuild-plugin-text-replace'"]
                     ]
                 }
             )
@@ -57,18 +57,24 @@ Search with Text or Regex and replace the found content with a string.
 Type: `Array`
 Default: `[]`
 
+All  information about the [replaceAll regex Options and replacer functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll).
+
+
 **Examples:**
 ```js
 [
-    /\d{4}-\d{2}-\d{2}/ : 'DATE', // replace e.g. 2020-10-02 with DATE
-    '__buildVersion' : '"1.1.1"'
+    // transform 2020-10-02 to 02.10.2020
+    [/(\d{4})-(\d{2})-(\d{2})/g , (match,p1,p2,p3,offset,wholeString)=>`${p3}.${p2}.${p1}`], 
+    ['__buildVersion' , '"1.1.1"'],
+    [/(\s*)const(\s+a\s*=\s*1[\s;\n])/g, '$1let$2']
 ]
 ```
+> **Note:** `/g` for globale replacement is a must requirement
 
 ## Roadmap
 
+ - [X] tests
  - [ ] speed tests
- - [ ] tests
 
 ## Contribution
 
