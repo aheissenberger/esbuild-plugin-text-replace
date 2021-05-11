@@ -18,31 +18,47 @@ const generateFilter = (options) => {
 }
 
 const replaceWithPattern = (source: string, pattern: replacePattern[]) => {
-    let content: string = Object.assign("", source);
+    let content= source.slice()
     pattern.forEach(([regex, replaceString]) => {
-        content.replaceAll(regex, replaceString)
+        content=content.replaceAll(regex, replaceString)
     });
     return content
 }
 
-
-
-function main(options: optionI = {
-    include: /.*/,
-    pattern: []
-}) {
-    const filter = generateFilter(options)
-    const namespace = options?.namespace
-
+const setupPlugin = (filter:RegExp, namespace, pattern:replacePattern[], errors) => {
     return {
         name: 'textReplace',
         setup(build) {
-            build.onLoad({ filter }, namespace, async ({ path }) => {
-                const source = await fs.readFile(path, "utf8");
-                const contents = replaceWithPattern(source, options.pattern)
-                return { contents };
-            })
+            if (errors.length === 0) {
+                build.onLoad({ filter, namespace }, async ({ path }) => {
+                    const source = await fs.readFile(path, "utf8");
+                    const contents = replaceWithPattern(source, pattern)
+                    return { contents };
+                })
+            }
         }
     }
 }
-export default main
+
+function textReplace(options: optionI = {
+    include: /.*/,
+    pattern: []
+}) {
+    let errors = []
+    const filter = generateFilter(options)
+    const namespace = options?.namespace
+
+    if (!Array.isArray(options.pattern)) {
+        //console.error(`Options.pattern must be an Array!`)
+        errors.push({ text: `Plugin "textReplace": Options.pattern must be an Array!` })
+        return setupPlugin(filter, namespace, options.pattern, errors)
+    }
+    if (options.pattern.length === 0) {
+        //console.error(`Options.pattern must not be an empty Array!`)
+        errors.push({ text: `Plugin "textReplace": Options.pattern must not be an empty Array!` })
+        return setupPlugin(filter, namespace, options.pattern, errors)
+    }
+
+    return setupPlugin(filter, namespace, options.pattern, errors)
+}
+export default textReplace
