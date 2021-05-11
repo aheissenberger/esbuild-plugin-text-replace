@@ -1,0 +1,41 @@
+{
+  "name": "esbuild-plugin-text-replace",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "./dist/index.esm.js",
+  "exports": {
+    "require": "./dist/index.js",
+    "default": "./dist/index.modern.js"
+  },
+  "source": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "license": "bsd-2-clause",
+  "description": "Replace Text with Regex before bundling with esbuild.",
+  "keywords": [
+    "esbuild",
+    "plugin",
+    "rplace",
+    "regex"
+  ],
+  "author": "Andreas Heissenberger <andreas@heissenberger.at>",
+  "homepage": "https://github.com/aheissenberger/esbuild-plugin-text-replace",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aheissenberger/esbuild-plugin-text-replace.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "jest": "^26.6.3",
+    "microbundle": "^0.13.0",
+    "ts-jest": "^26.5.6"
+  },
+  "scripts": {
+    "build": "microbundle build  -i src/index.ts -f es,cjs",
+    "dev": "microbundle watch src/index.ts  -f es,cjs --no-compress",
+    "prepublishOnly": "microbundle build -i src/index.ts  -f es,cjs --compress --no-sourcemap",
+    "test": "npm run jest"
+  },
+  "dependencies": {
+    "ts-replace-all": "^1.0.0"
+  }
+}
