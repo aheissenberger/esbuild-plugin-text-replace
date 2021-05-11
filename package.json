@@ -1,11 +1,11 @@
 {
   "name": "esbuild-plugin-text-replace",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
-  "module": "./dist/index.esm.js",
+  "module": "./dist/index.esm.mjs",
   "exports": {
     "require": "./dist/index.js",
-    "default": "./dist/index.modern.js"
+    "default": "./dist/index.esm.mjs"
   },
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
@@ -30,8 +30,8 @@
     "ts-jest": "^26.5.6"
   },
   "scripts": {
-    "build": "microbundle build  -i src/index.ts -f es,cjs",
-    "dev": "microbundle watch src/index.ts  -f es,cjs --no-compress",
+    "build": "microbundle build  -i src/index.ts -f es,cjs --sourcemap",
+    "dev": "microbundle watch src/index.ts  -f es,cjs --no-compress --sourcemap",
     "prepublishOnly": "microbundle build -i src/index.ts  -f es,cjs --compress --no-sourcemap",
     "test": "npm run jest"
   },
