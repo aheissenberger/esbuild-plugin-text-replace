@@ -21,7 +21,7 @@ await esbuild.build(
             textReplace(
                 {
                     include: /mypackage\/dist/loader\.js$\/,
-                    patterns:[
+                    pattern:[
                         ['const installRetry','let installRetry'],
                         [/const\s+{\s*textReplace\s*}\s*=\s*require\s*\(\s*'esbuild-plugin-text-replace'\s*\)\s*;/g , "'import textReplace from 'esbuild-plugin-text-replace'"]
                     ]
