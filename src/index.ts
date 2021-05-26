@@ -1,5 +1,12 @@
-import * as fs from 'fs/promises'
+// import * as fs from 'fs/promises'
 import 'ts-replace-all'
+
+let fs
+try {
+  fs = require('fs/promises');    
+} catch (e) {
+  fs = require('fs').promises;   
+}
 
 type replacePattern = [RegExp | string, string | any]
 
