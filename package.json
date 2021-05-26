@@ -40,5 +40,6 @@
   },
   "dependencies": {
     "ts-replace-all": "^1.0.0"
-  }
+  },
+  "engines" : { "node" : ">=10.1.0" }
 }

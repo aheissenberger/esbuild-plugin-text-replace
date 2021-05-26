@@ -6,6 +6,8 @@ Replace content before bundling with support for Filefilter, Namespace and Regex
 
     $ npm install --save-dev esbuild-plugin-text-replace
 
+**Hint:** Node >=10.1.0 for fs.promise
+
 ## Usage
 
 ```js
