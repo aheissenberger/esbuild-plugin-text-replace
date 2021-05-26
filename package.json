@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-text-replace",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/index.js",
   "module": "./dist/index.esm.mjs",
   "exports": {
@@ -41,5 +41,7 @@
   "dependencies": {
     "ts-replace-all": "^1.0.0"
   },
-  "engines" : { "node" : ">=10.1.0" }
+  "engines": {
+    "node": ">=10.1.0"
+  }
 }
