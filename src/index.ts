@@ -7,7 +7,7 @@ const fs = fsold.promises
 export interface optionI {
     include?: RegExp,
     namespace?: string,
-    pattern: replacePattern[]
+    patterns: replacePattern[]
 }
 
 const generateFilter = (options) => {
@@ -42,20 +42,20 @@ const setupPlugin = (filter: RegExp, namespace, pattern: replacePattern[], error
 
 function textReplace(options: optionI = {
     include: /.*/,
-    pattern: []
+    patterns: []
 }) {
     let errors = []
     const filter = generateFilter(options)
     const namespace = options?.namespace
 
-    if (!Array.isArray(options.pattern)) {
+    if (!Array.isArray(options.patterns)) {
         throw new Error(`Plugin "textReplace": Options.pattern must be an Array!`)
 
     }
-    if (options.pattern.length === 0) {
+    if (options.patterns.length === 0) {
         throw new Error(`Plugin "textReplace": Options.pattern must not be an empty Array!`)
     }
 
-    return setupPlugin(filter, namespace, options.pattern, errors)
+    return setupPlugin(filter, namespace, options.patterns, errors)
 }
 export default textReplace
