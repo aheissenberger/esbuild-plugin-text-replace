@@ -1,15 +1,9 @@
-// import * as fs from 'fs/promises'
+import * as fsold from 'fs'
 import 'ts-replace-all'
-
-let fs
-try {
-  fs = require('fs/promises');    
-} catch (e) {
-  fs = require('fs').promises;   
-}
 
 type replacePattern = [RegExp | string, string | any]
 
+const fs = fsold.promises
 export interface optionI {
     include?: RegExp,
     namespace?: string,
