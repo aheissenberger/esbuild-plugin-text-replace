@@ -5,8 +5,7 @@
   "module": "dist/index.esm.mjs",
   "exports": {
     "require": "./dist/index.js",
-    "default": "./dist/index.esm.mjs",
-    ".": "./dist/index.esm.mjs"
+    "default": "./dist/index.esm.mjs"
   },
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
