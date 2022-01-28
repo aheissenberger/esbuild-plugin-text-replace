@@ -29,7 +29,13 @@ const replaceWithPattern = (source: string, pattern: replacePattern[]) => {
 const setupPlugin = (filter: RegExp, namespace, pattern: replacePattern[], errors) => {
     return {
         name: 'textReplace',
-        setup(build) {
+        setup(build, { transform=null} = {}) {
+
+            if (transform) {
+                const source = transform?.contents
+                const contents = replaceWithPattern(source, pattern)
+                return { contents };
+            };
 
             build.onLoad({ filter, namespace }, async ({ path }) => {
                 const source = await fs.readFile(path, "utf8");

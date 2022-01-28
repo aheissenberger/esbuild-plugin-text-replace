@@ -73,6 +73,10 @@ All  information about the [replaceAll regex Options and replacer functions](htt
 ```
 > **Note:** `/g` for globale replacement is a must requirement
 
+## History
+
+* 1.2.0 Add [esbuild piping](https://github.com/nativew/esbuild-plugin-pipe) support
+* 1.1.3 Initial relase
 ## Roadmap
 
  - [X] tests
