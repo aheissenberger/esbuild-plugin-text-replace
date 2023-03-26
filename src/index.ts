@@ -10,7 +10,14 @@ export interface optionI {
     pattern: replacePattern[]
 }
 
-const generateFilter = (options) => {
+interface pipeI {
+    transform?: null | {
+        contents: string
+        args: { path: string, namespace: string, suffix: string, pluginData: any }
+    }
+}
+
+const generateFilter = (options: optionI) => {
     if (Object.prototype.toString.call(options.include) !== '[object RegExp]') {
         console.warn(`Plugin "textReplace": Options.include must be a RegExp object, but gets an '${typeof options.include}' type. \nThis request will match ANY file!`);
         return /.*/
@@ -26,15 +33,19 @@ const replaceWithPattern = (source: string, pattern: replacePattern[]) => {
     return content
 }
 
-const setupPlugin = (filter: RegExp, namespace, pattern: replacePattern[], errors) => {
+const setupPlugin = (filter: RegExp|undefined, namespace: string | undefined, pattern: replacePattern[], errors: any[]) => {
     return {
         name: 'textReplace',
-        setup(build, { transform=null} = {}) {
+        setup(build, { transform = null }: pipeI = {}): { contents: string } | undefined {
 
             if (transform) {
-                const source = transform?.contents
-                const contents = replaceWithPattern(source, pattern)
-                return { contents };
+                if (transform?.contents && (namespace === undefined || namespace === '' || transform?.args?.namespace === namespace) && (filter === undefined || filter.test(transform?.args?.path))) {
+                    const source = transform.contents
+                    const contents = replaceWithPattern(source, pattern)
+                    return { contents };
+                } else {
+                    return { contents: transform.contents };
+                }
             };
 
             build.onLoad({ filter, namespace }, async ({ path }) => {

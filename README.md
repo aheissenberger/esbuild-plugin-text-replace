@@ -10,6 +10,7 @@ Replace content before bundling with support for Filefilter, Namespace and Regex
 
 ## Usage
 
+**as a plugin**
 ```js
 import esbuild from 'esbuild'
 import textReplace from 'esbuild-plugin-text-replace'
@@ -18,11 +19,10 @@ await esbuild.build(
     {
         entryPoints: ['./test-build-input'],
         outfile: 'test-build-out.js',
-        plugins: [
-            
+        plugins: [ 
             textReplace(
                 {
-                    include: /mypackage\/dist/loader\.js$\/,
+                    include: /mypackage\/dist\/loader\.js$/,
                     pattern:[
                         ['const installRetry','let installRetry'],
                         [/const\s+{\s*textReplace\s*}\s*=\s*require\s*\(\s*'esbuild-plugin-text-replace'\s*\)\s*;/g , "'import textReplace from 'esbuild-plugin-text-replace'"]
@@ -30,6 +30,38 @@ await esbuild.build(
                 }
             )
         ],
+    }
+)
+```
+
+**as part of a pipe**
+```js
+import esbuild from 'esbuild';
+import pipe from 'esbuild-plugin-pipe';
+import textReplace from 'esbuild-plugin-text-replace';
+
+await esbuild.build(
+    {
+        entryPoints: ['./test-build-input'],
+        outfile: 'test-build-out.js',
+        bundle: true,
+        plugins: [
+            pipe({
+                filter: /.*/,
+                namespace: '',
+                plugins: [
+                    textReplace(
+                        {
+                            include: /mypackage\/dist\/loader\.js$/,
+                            pattern:[
+                                ['const installRetry','let installRetry'],
+                                [/const\s+{\s*textReplace\s*}\s*=\s*require\s*\(\s*'esbuild-plugin-text-replace'\s*\)\s*;/g , "'import textReplace from 'esbuild-plugin-text-replace'"]
+                            ]
+                        }
+                    )
+                ]
+            })
+        ]
     }
 )
 ```
@@ -75,7 +107,8 @@ All  information about the [replaceAll regex Options and replacer functions](htt
 
 ## History
 
-* 1.2.0 Add [esbuild piping](https://github.com/nativew/esbuild-plugin-pipe) support
+* 1.3.0 **pipe mode only:** Use the regex from parameter include to transform only files which match
+* 1.2.0 Add [esbuild pipe](https://github.com/nativew/esbuild-plugin-pipe) support
 * 1.1.3 Initial relase
 ## Roadmap
 

@@ -86,7 +86,157 @@ describe('configuration has', () => {
         }))
 
     })
+    describe('pipe', () => {
+        it('pipe ', () => {
+            const setup: optionI = {
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'B'
 
+            const plugin = textReplace(setup)
 
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
 
+        it('pipe with file included', () => {
+            const setup: optionI = {
+                include: /loader.js$/,
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'B'
+
+            const plugin = textReplace(setup)
+
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
+
+        it('pipe with file included namespace file', () => {
+            const setup: optionI = {
+                namespace: 'file',
+                include: /loader.js$/,
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'B'
+
+            const plugin = textReplace(setup)
+
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
+
+        it('pipe with file included namespace file', () => {
+            const setup: optionI = {
+                namespace: '',
+                include: /loader.js$/,
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'B'
+
+            const plugin = textReplace(setup)
+
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
+
+        it('pipe with file included namespace http', () => {
+            const setup: optionI = {
+                namespace: 'http',
+                include: /loader.js$/,
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'A' // no transformation
+
+            const plugin = textReplace(setup)
+
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
+
+        it('pipe with file not include', () => {
+            const setup: optionI = {
+                include: /notextists.js$/,
+                pattern: [
+                    ['A', 'B']
+                ]
+            }
+            const expected = 'A'  // no transformation
+
+            const plugin = textReplace(setup)
+
+            const result = plugin.setup(null, {
+                transform: {
+                    args: {
+                        path: '/directory/loader.js',
+                        namespace: 'file',
+                        suffix: '',
+                        pluginData: undefined
+                    },
+                    contents: 'A'
+                }
+            })
+            expect(result?.contents).toBe(expected)
+        })
+    })
 })
